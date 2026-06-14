@@ -58,287 +58,19 @@ class LePlayer extends HTMLElement {
         const opacidadeBgLegenda = config?.['opacidade_bg_legenda'] || 0.5;
 
         const styleGlobal = document.createElement('style');
+        
         styleGlobal.textContent = `
-  #temp-player, .plyr { 
-    width: 100%;
-    height: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: contain;
-    max-width: 100%;
-    margin-left: auto;
-    margin-right: auto;
-    border-radius: 0px;
-    overflow: hidden;
-    
-  }
-
-  :root {
-    --plyr-color-main: #3b82f6;
-    --plyr-video-controls-background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
-  }
-
-  
-   .plyr__control--overlaid svg {
-    width: 22px !important;
-    height: 22px !important;
-    
-    }
-
-
-  .plyr__control--overlaid {
-    background: var(--plyr-color-main) !important;
-    border-radius: 50% !important;
-    padding: 18px !important;
-    opacity: 1 !important;
-    
-  }
-
-  .plyr--playing .plyr__control--overlaid {
-    opacity: 0 !important;
-    visibility: hidden !important;
-  }
-
-  
-  .plyr__controls {
-    padding-bottom: 10px !important;
-    padding-left: 20px !important;
-    padding-right: 20px !important;
-    flex-wrap: wrap !important;
-    justify-content: flex-start !important;
-  }
-
-  .plyr__controls .plyr__control {
-    background: transparent !important;
-    padding: 8px !important;
-    transition: background 0.2s ease;
-    border-radius: 4px;
-  }
-
-  .plyr__controls .plyr__control:hover {
-    background: var(--plyr-color-main) !important;
-  }
-
-  .plyr__slider__track {
-    height: 6px !important;
-    border-radius: 3px !important;
-  }
-
-  .plyr__slider__thumb {
-    background: #ffffff !important;
-    height: 16px !important;
-    width: 16px !important;
-  }
-
-  .plyr__controls>.plyr__control,
-  .plyr__controls>.plyr__volume,
-  .plyr__controls>.plyr__progress__container,
-  .plyr__controls>.plyr__time,
-  .plyr__controls>.plyr__menu {
-    order: 2;
-    margin-left: 1px !important;
-    margin-right: 1px !important;
-    margin-top: 10px !important;
-  }
-
-  .plyr__controls>.plyr__progress__container {
-    order: 0;
-    flex: calc(100% + 16px) !important;
-    margin-left: -8px !important;
-    margin-right: -8px !important;
-    margin-top: 5px !important;
-    margin-bottom: 0px !important;
-    align-items: center !important;
-    padding-right: 12px !important;
-    z-index: 0 !important;
-  }
-
-  .plyr__controls>[data-plyr="play"] {
-    order: 1;
-    margin-left: 0 !important;
-  }
-
-  .plyr__controls>.plyr__volume {
-    order: 2;
-  }
-
-  .plyr__controls>.plyr__time--current {
-    order: 3;
-    margin-left: 10px !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
-    margin-right: auto !important;
-  }
-
-  .plyr__controls::after {
-    content: "";
-    flex-grow: 1;
-    order: 4;
-  }
-
-  .plyr__controls>[data-plyr="captions"] {
-    order: 5;
-  }
-
-  #vidstack-custom-yt-btn {
-    order: 6;
-  }
-
-  .plyr__controls>.plyr__menu {
-    order: 7;
-  }
-
-  .plyr__controls>[data-plyr="fullscreen"] {
-    order: 8;
-    margin-right: 0 !important;
-  }
-
-  .plyr__controls>[data-plyr="pip"],
-  .plyr__controls>[data-plyr="airplay"] {
-    display: none !important;
-  }
-
-  .plyr__menu__container {
-    zoom: 0.9 !important;
-    bottom: 100% !important;
-    top: auto !important;
-  }
-
-  .plyr__menu__container .plyr__control--forward {
-    padding-right: calc(calc(var(--plyr-control-spacing, 10px) * .7) * 4) !important;
-  }
-
-  .plyr__menu__container .plyr__control--back {
-    padding-left: calc(calc(var(--plyr-control-spacing, 10px) * .7) * 4) !important;
-  }
-
-  #novo-player .plyr__progress { 
-    display: flex !important;
-    width: 100% !important;
-  }
-
-  @media (max-width: 480px) {
-
-    .plyr__control--overlaid {
-    width: 56px !important;
-    height: 56px !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    }
-
-    .plyr__control--overlaid svg {
-    width: 24px !important;
-    height: 24px !important;
-   
-
-    }
-    
-    .plyr__controls {
-      padding: 10px !important;
-    }
-
-    .plyr__progress {
-      transform: translateY(4px) !important;
-    }
-
-    .plyr__slider__track {
-      height: 4px !important;
-      border-radius: 3px !important;
-    }
-
-    .plyr__slider__thumb {
-      background: #ffffff !important;
-      height: 12px !important;
-      width: 12px !important;
-    }
-
-    media-volume-slider[data-media-volume-slider] {
-      display: none !important;
-      width: 0 !important;
-      min-width: 0 !important;
-      flex: 0 0 0 !important;
-    }
-
-    .plyr__controls__item.plyr__volume {
-      width: auto !important;
-      min-width: 0 !important;
-      max-width: 24px !important;
-      display: flex !important;
-      gap: 0 !important;
-    }
-
-    .plyr__controls__item.plyr__time.plyr__time--current {
-      margin-left: 0 !important;
-      margin-right: 0 !important;
-      padding-left: 0 !important;
-      padding-right: 0 !important;
-    }
-
-    .plyr__controls>.plyr__control, 
-    .plyr__controls>.plyr__volume, 
-    .plyr__controls>.plyr__progress__container, 
-    .plyr__controls>.plyr__time, 
-    .plyr__controls>.plyr__menu {
-      margin-top: 4px !important;
-    }
-
-    .plyr__control--overlaid {
-      background: var(--plyr-color-main) !important;
-      border-radius: 50% !important;
-      padding: 12px !important;
-      opacity: 1 !important;
-    }
-
-    .plyr__controls .plyr__control {
-      background: transparent !important;
-      padding: 6px !important;
-      transition: background 0.2s ease;
-      border-radius: 4px;
-    }
-
-    .plyr__controls .plyr__control svg {
-      width: 14px !important;
-      height: 14px !important;
-    }
-
-    #vidstack-custom-loop-btn {
-      width: 22px !important;
-      height: 22px !important;
-    }
-
-    .plyr__controls>.plyr__time--current {
-      font-size: 14px !important;
-      text-align: left !important;
-      margin-left: 2px !important;
-    }
-
-    #novo-player .plyr__progress { 
-      display: flex !important;
-      width: 100% !important;
-    }
-
-    .plyr__menu__container {
-      zoom: 0.5 !important;
-      bottom: 100% !important;
-      top: auto !important;
-    }
-
-    .plyr__menu__container .plyr__control--forward {
-      padding-right: calc(calc(var(--plyr-control-spacing, 10px) * .7) * 4) !important;
-    }
-
-    .plyr__menu__container .plyr__control--back {
-      padding-left: calc(calc(var(--plyr-control-spacing, 10px) * .7) * 4) !important;
-      margin-bottom: 24px !important;
-    }
-
-    /* CORRIGE BUG BARRA DE PROGRESSO SOME */
-
-    #temp-player .plyr__progress { 
-    display: flex !important; 
-    }
-}
-`;
+            #temp-player { border-radius: ${raioBorda}px !important; --plyr-color-main: ${corPrincipal}; --plyr-video-background: ${corSecundaria}; }
+            ::cue { font-family: '${fonteLegenda}', sans-serif; font-size: ${tamanhoLegenda === 'xlarge' ? '1.5em' : tamanhoLegenda === 'large' ? '1.2em' : '1em'}; color: ${corLegenda} !important; background-color: ${corBgLegenda}${Math.round(opacidadeBgLegenda * 255).toString(16).padStart(2, '0')} !important; font-weight: ${negritoLegenda ? 'bold' : 'normal'}; font-style: ${italicoLegenda ? 'italic' : 'normal'}; text-decoration: ${sublinhadoLegenda ? 'underline' : 'none'}; }
+            ${ocultarControles ? '#temp-player .plyr__controls { display: none !important; }' : ''}
+            ${ocultarBotaoCentral ? '#temp-player .plyr__control--overlaid { display: none !important; }' : ''}
+            ${ocultarTempoVideo ? '#temp-player .plyr__progress, #temp-player .plyr__duration, #temp-player .plyr__current-time { display: none !important; }' : ''}
+            ${ocultarVolume ? '#temp-player .plyr__volume { display: none !important; }' : ''}
+            ${ocultarLegendas ? '#temp-player .plyr__menu--captions { display: none !important; }' : ''}
+            ${ocultarConfiguracoes ? '#temp-player .plyr__settings { display: none !important; }' : ''}
+            ${desabilitarTelaCheia ? '#temp-player .plyr__fullscreen { display: none !important; }' : ''}
+            ${!ativarVoltarAvancar ? '#temp-player .plyr__rewind, #temp-player .plyr__fast-forward { display: none !important; }' : ''}
+        `;
         document.head.appendChild(styleGlobal);
 
         const containerEl = document.getElementById('temp-player');
@@ -363,32 +95,32 @@ class LePlayer extends HTMLElement {
             autoPlay: video.autoplay, muted: video.muted, loop: video.loop, playsInline: true,
             viewType: 'video', streamType: 'on-demand', liveEdgeTolerance: 0, clipStartTime: 0.01,
             onPlayFail: (d, n) => { if (n.isOriginTrusted) n.remote.play(); },
-            layout: new PlyrLayout({ speed: [0.5, 0.75, 1, 1.25, 1.5, 2], thumbnails: '', ...(ativarBotaoStop && { stopButton: true }), ...(ativarBotaoLoop && { loopButton: true }) })
+            layout: new PlyrLayout({ speed: [0.5,0.75,1,1.25,1.5,2], thumbnails: '', ...(ativarBotaoStop && { stopButton: true }), ...(ativarBotaoLoop && { loopButton: true }) })
         });
         window.meuPlayerVidstack = vidstackPlayer;
         setupGestures(vidstackPlayer);
 
-        function hmsToSeconds(str) { if (!str) return 0; const p = str.split(':'); let s = 0, m = 1; while (p.length) { s += m * parseInt(p.pop(), 10); m *= 60; } return s; }
+        function hmsToSeconds(str) { if (!str) return 0; const p = str.split(':'); let s=0, m=1; while(p.length) { s += m * parseInt(p.pop(),10); m*=60; } return s; }
         const targetSec = hmsToSeconds(tempoInicialRaw);
         const targetRate = parseFloat(velocidadeRaw);
-        if (targetSec > 0 || (targetRate > 0 && targetRate !== 1)) {
-            let attempts = 0, max = 20;
+        if (targetSec>0 || (targetRate>0 && targetRate!==1)) {
+            let attempts=0, max=20;
             const enforcer = setInterval(() => {
                 attempts++;
                 let needs = false;
-                if (!isNaN(targetRate) && targetRate > 0 && Math.abs(vidstackPlayer.playbackRate - targetRate) > 0.01) {
+                if (!isNaN(targetRate) && targetRate>0 && Math.abs(vidstackPlayer.playbackRate - targetRate)>0.01) {
                     vidstackPlayer.playbackRate = targetRate; vidstackPlayer.defaultPlaybackRate = targetRate; needs = true;
                 }
-                if (!isNaN(targetSec) && targetSec > 0 && Math.abs(vidstackPlayer.currentTime - targetSec) > 0.5 && !vidstackPlayer.live) {
-                    if (vidstackPlayer.currentTime < targetSec + 2) vidstackPlayer.currentTime = targetSec; needs = true;
+                if (!isNaN(targetSec) && targetSec>0 && Math.abs(vidstackPlayer.currentTime - targetSec)>0.5 && !vidstackPlayer.live) {
+                    if (vidstackPlayer.currentTime < targetSec+2) vidstackPlayer.currentTime = targetSec; needs = true;
                 }
-                if (attempts >= max) clearInterval(enforcer);
-                else if (!needs && attempts > 8) clearInterval(enforcer);
-            }, 200);
+                if (attempts>=max) clearInterval(enforcer);
+                else if (!needs && attempts>8) clearInterval(enforcer);
+            },200);
         }
 
         vidstackPlayer.addEventListener('provider-change', () => {
-            if (legendaUrl && legendaUrl !== 'URL_DA_SUA_LEGENDA.vtt') {
+            if (legendaUrl && legendaUrl!=='URL_DA_SUA_LEGENDA.vtt') {
                 vidstackPlayer.textTracks.add({ src: legendaUrl, label: 'Ativado', kind: 'subtitles', language: 'auto', default: !ocultarLegendas });
             }
         });
@@ -418,7 +150,7 @@ class LePlayer extends HTMLElement {
                 }
                 return false;
             };
-            const i = setInterval(() => { if (inject()) clearInterval(i); }, 200);
+            const i = setInterval(() => { if(inject()) clearInterval(i); }, 200);
             setTimeout(() => clearInterval(i), 5000);
         }, 500);
     }
