@@ -69,25 +69,36 @@ class LePlayer extends HTMLElement {
     margin-right: auto;
     border-radius: 0px;
     overflow: hidden;
+    
   }
+
   :root {
     --plyr-color-main: #3b82f6;
     --plyr-video-controls-background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8));
   }
-  .plyr__control--overlaid svg {
+
+  
+   .plyr__control--overlaid svg {
     width: 22px !important;
     height: 22px !important;
-  }
+    
+    }
+
+
   .plyr__control--overlaid {
     background: var(--plyr-color-main) !important;
     border-radius: 50% !important;
     padding: 18px !important;
     opacity: 1 !important;
+    
   }
+
   .plyr--playing .plyr__control--overlaid {
-    opacity: 0 !important;å
+    opacity: 0 !important;
     visibility: hidden !important;
   }
+
+  
   .plyr__controls {
     padding-bottom: 10px !important;
     padding-left: 20px !important;
@@ -95,24 +106,29 @@ class LePlayer extends HTMLElement {
     flex-wrap: wrap !important;
     justify-content: flex-start !important;
   }
+
   .plyr__controls .plyr__control {
     background: transparent !important;
     padding: 8px !important;
     transition: background 0.2s ease;
     border-radius: 4px;
   }
+
   .plyr__controls .plyr__control:hover {
     background: var(--plyr-color-main) !important;
   }
+
   .plyr__slider__track {
     height: 6px !important;
     border-radius: 3px !important;
   }
+
   .plyr__slider__thumb {
     background: #ffffff !important;
     height: 16px !important;
     width: 16px !important;
   }
+
   .plyr__controls>.plyr__control,
   .plyr__controls>.plyr__volume,
   .plyr__controls>.plyr__progress__container,
@@ -123,6 +139,7 @@ class LePlayer extends HTMLElement {
     margin-right: 1px !important;
     margin-top: 10px !important;
   }
+
   .plyr__controls>.plyr__progress__container {
     order: 0;
     flex: calc(100% + 16px) !important;
@@ -134,13 +151,16 @@ class LePlayer extends HTMLElement {
     padding-right: 12px !important;
     z-index: 0 !important;
   }
+
   .plyr__controls>[data-plyr="play"] {
     order: 1;
     margin-left: 0 !important;
   }
+
   .plyr__controls>.plyr__volume {
     order: 2;
   }
+
   .plyr__controls>.plyr__time--current {
     order: 3;
     margin-left: 10px !important;
@@ -148,76 +168,97 @@ class LePlayer extends HTMLElement {
     font-weight: 500 !important;
     margin-right: auto !important;
   }
+
   .plyr__controls::after {
     content: "";
     flex-grow: 1;
     order: 4;
   }
+
   .plyr__controls>[data-plyr="captions"] {
     order: 5;
   }
+
   #vidstack-custom-yt-btn {
     order: 6;
   }
+
   .plyr__controls>.plyr__menu {
     order: 7;
   }
+
   .plyr__controls>[data-plyr="fullscreen"] {
     order: 8;
     margin-right: 0 !important;
   }
+
   .plyr__controls>[data-plyr="pip"],
   .plyr__controls>[data-plyr="airplay"] {
     display: none !important;
   }
+
   .plyr__menu__container {
     zoom: 0.9 !important;
     bottom: 100% !important;
     top: auto !important;
   }
+
   .plyr__menu__container .plyr__control--forward {
     padding-right: calc(calc(var(--plyr-control-spacing, 10px) * .7) * 4) !important;
   }
+
   .plyr__menu__container .plyr__control--back {
     padding-left: calc(calc(var(--plyr-control-spacing, 10px) * .7) * 4) !important;
   }
+
   #novo-player .plyr__progress { 
     display: flex !important;
     width: 100% !important;
   }
+
   @media (max-width: 480px) {
+
     .plyr__control--overlaid {
-      width: 56px !important;
-      height: 56px !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
+    width: 56px !important;
+    height: 56px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     }
+
     .plyr__control--overlaid svg {
-      width: 24px !important;
-      height: 24px !important;
+    width: 24px !important;
+    height: 24px !important;
+   
+
     }
+    
     .plyr__controls {
       padding: 10px !important;
     }
+
     .plyr__progress {
       transform: translateY(4px) !important;
     }
+
     .plyr__slider__track {
       height: 4px !important;
       border-radius: 3px !important;
     }
+
     .plyr__slider__thumb {
       background: #ffffff !important;
       height: 12px !important;
       width: 12px !important;
     }
+
     media-volume-slider[data-media-volume-slider] {
       display: none !important;
       width: 0 !important;
       min-width: 0 !important;
       flex: 0 0 0 !important;
     }
+
     .plyr__controls__item.plyr__volume {
       width: auto !important;
       min-width: 0 !important;
@@ -225,12 +266,14 @@ class LePlayer extends HTMLElement {
       display: flex !important;
       gap: 0 !important;
     }
+
     .plyr__controls__item.plyr__time.plyr__time--current {
       margin-left: 0 !important;
       margin-right: 0 !important;
       padding-left: 0 !important;
       padding-right: 0 !important;
     }
+
     .plyr__controls>.plyr__control, 
     .plyr__controls>.plyr__volume, 
     .plyr__controls>.plyr__progress__container, 
@@ -238,51 +281,63 @@ class LePlayer extends HTMLElement {
     .plyr__controls>.plyr__menu {
       margin-top: 4px !important;
     }
+
     .plyr__control--overlaid {
       background: var(--plyr-color-main) !important;
       border-radius: 50% !important;
       padding: 12px !important;
       opacity: 1 !important;
     }
+
     .plyr__controls .plyr__control {
       background: transparent !important;
       padding: 6px !important;
       transition: background 0.2s ease;
       border-radius: 4px;
     }
+
     .plyr__controls .plyr__control svg {
       width: 14px !important;
       height: 14px !important;
     }
+
     #vidstack-custom-loop-btn {
       width: 22px !important;
       height: 22px !important;
     }
+
     .plyr__controls>.plyr__time--current {
       font-size: 14px !important;
       text-align: left !important;
       margin-left: 2px !important;
     }
+
     #novo-player .plyr__progress { 
       display: flex !important;
       width: 100% !important;
     }
+
     .plyr__menu__container {
       zoom: 0.5 !important;
       bottom: 100% !important;
       top: auto !important;
     }
+
     .plyr__menu__container .plyr__control--forward {
       padding-right: calc(calc(var(--plyr-control-spacing, 10px) * .7) * 4) !important;
     }
+
     .plyr__menu__container .plyr__control--back {
       padding-left: calc(calc(var(--plyr-control-spacing, 10px) * .7) * 4) !important;
       margin-bottom: 24px !important;
     }
+
+    /* CORRIGE BUG BARRA DE PROGRESSO SOME */
+
     #temp-player .plyr__progress { 
-      display: flex !important; 
+    display: flex !important; 
     }
-  }
+}
 `;
         document.head.appendChild(styleGlobal);
 
