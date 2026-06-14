@@ -66,7 +66,13 @@ class LePlayer extends HTMLElement {
     // CSS dinâmico (layout sem cores fixas + variáveis dinâmicas)
     const styleGlobal = document.createElement('style');
     styleGlobal.textContent = `
-      /* --- LAYOUT FIXO (sem cores fixas) --- */
+      
+    :root {
+        --plyr-video-control-color: ${corSecundaria};
+        --plyr-video-control-color-hover: ${corSecundaria};
+    }   
+    
+    /* --- LAYOUT FIXO (sem cores fixas) --- */
       #temp-player, .plyr {
         width: 100%;
         height: 100%;
@@ -78,6 +84,8 @@ class LePlayer extends HTMLElement {
         border-radius: ${raioBorda}px !important;
         overflow: hidden;
       }
+        
+      
       .plyr__control--overlaid svg {
         width: 22px !important;
         height: 22px !important;
