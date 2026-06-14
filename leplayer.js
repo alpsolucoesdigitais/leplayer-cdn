@@ -291,7 +291,8 @@ class LePlayer extends HTMLElement {
       /* --- REGRAS DINÂMICAS (cores, legendas, condicionais) --- */
       #temp-player {
         --plyr-color-main: ${corPrincipal};
-        --plyr-video-background: ${corSecundaria};
+        --plyr-video-control-color: ${corSecundaria};
+        --plyr-video-control-color-hover: ${corSecundaria}
       }
       ::cue {
         font-family: '${fonteLegenda}', sans-serif;
