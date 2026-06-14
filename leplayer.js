@@ -7,6 +7,12 @@ class LePlayer extends HTMLElement {
       return;
     }
 
+    const videoId = this.getAttribute('video');
+    if (!videoId) {
+        console.error('<le-player> requer o atributo video');
+        return;
+    }
+
     const container = document.createElement('div');
     container.id = 'temp-player';
     this.appendChild(container);
