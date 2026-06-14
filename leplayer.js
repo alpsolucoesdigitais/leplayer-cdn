@@ -154,7 +154,7 @@ class LePlayer extends HTMLElement {
       .plyr__controls>[data-plyr="captions"] {
         order: 5;
       }
-      #vidstack-custom-yt-btn {
+      #yt-btn {
         order: 6;
       }
       .plyr__controls>.plyr__menu {
