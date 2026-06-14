@@ -13,7 +13,7 @@ class LePlayer extends HTMLElement {
 
         const css = document.createElement('link');
         css.rel = 'stylesheet';
-        css.href = 'https://cdn.leplayer.com.br/vidstack-bundle.css';
+        css.href = 'https://cdn.leplayer.com.br/leplayer-bundle.css';
         document.head.appendChild(css);
 
         const url = `https://flow.leplayer.com.br/webhook/player-request?user=${encodeURIComponent(userName)}&player=${encodeURIComponent(playerName)}`;
