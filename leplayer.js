@@ -1,9 +1,8 @@
-// leplayer.js
 class LePlayer extends HTMLElement {
     async connectedCallback() {
-        const user = this.getAttribute('user');
-        const player = this.getAttribute('player');
-        if (!user || !player) {
+        const userName = this.getAttribute('user');
+        const playerName = this.getAttribute('player');
+        if (!userName || !playerName) {
             console.error('<le-player> requer os atributos: user e player');
             return;
         }
@@ -17,18 +16,14 @@ class LePlayer extends HTMLElement {
         css.href = 'https://cdn.leplayer.com.br/vidstack-bundle.css';
         document.head.appendChild(css);
 
-        const url = `https://flow.leplayer.com.br/webhook/player-request?user=${encodeURIComponent(user)}&player=${encodeURIComponent(player)}`;
+        const url = `https://flow.leplayer.com.br/webhook/player-request?user=${encodeURIComponent(userName)}&player=${encodeURIComponent(playerName)}`;
         const res = await fetch(url);
         const config = await res.json();
 
-        // Carrega o bundle do Vidstack
         const module = await import('https://cdn.leplayer.com.br/vidstack-bundle.js');
         const { PlyrLayout, VidstackPlayer, setupGestures } = module;
 
-
-        // AQUI COMEÇA O CÓDIGO ORIGINAL, COM `variables` SUBSTITUÍDO POR `config`
-        // --------------------------------------------------------------
-
+        // Extrai configurações (igual ao original)
         const srcVideo = config?.['videosrc'];
         const posterVideo = config?.['poster'];
         const tituloVideo = config?.['nome_player'] || 'Player Customizável';
@@ -62,7 +57,6 @@ class LePlayer extends HTMLElement {
         const corBgLegenda = config?.['cor_bg_legenda'] || '#000000';
         const opacidadeBgLegenda = config?.['opacidade_bg_legenda'] || 0.5;
 
-        // Estilos globais (igual ao seu)
         const styleGlobal = document.createElement('style');
         styleGlobal.textContent = `
             #temp-player { border-radius: ${raioBorda}px !important; --plyr-color-main: ${corPrincipal}; --plyr-video-background: ${corSecundaria}; }
@@ -78,7 +72,6 @@ class LePlayer extends HTMLElement {
         `;
         document.head.appendChild(styleGlobal);
 
-        // Cria o elemento de vídeo
         const containerEl = document.getElementById('temp-player');
         containerEl.innerHTML = '';
         containerEl.style.borderRadius = `${raioBorda}px`;
@@ -95,18 +88,17 @@ class LePlayer extends HTMLElement {
         if (isLoop) { video.loop = true; }
         containerEl.appendChild(video);
 
-        // Inicializa o VidstackPlayer
-        const player = await VidstackPlayer.create({
+        // RENOMEADO: 'player' para 'vidstackPlayer'
+        const vidstackPlayer = await VidstackPlayer.create({
             target: video, src: video.src, title: tituloVideo,
             autoPlay: video.autoplay, muted: video.muted, loop: video.loop, playsInline: true,
             viewType: 'video', streamType: 'on-demand', liveEdgeTolerance: 0, clipStartTime: 0.01,
             onPlayFail: (d, n) => { if (n.isOriginTrusted) n.remote.play(); },
             layout: new PlyrLayout({ speed: [0.5,0.75,1,1.25,1.5,2], thumbnails: '', ...(ativarBotaoStop && { stopButton: true }), ...(ativarBotaoLoop && { loopButton: true }) })
         });
-        window.meuPlayerVidstack = player;
-        setupGestures(player);
+        window.meuPlayerVidstack = vidstackPlayer;
+        setupGestures(vidstackPlayer);
 
-        // Enforcer de tempo/velocidade (igual seu)
         function hmsToSeconds(str) { if (!str) return 0; const p = str.split(':'); let s=0, m=1; while(p.length) { s += m * parseInt(p.pop(),10); m*=60; } return s; }
         const targetSec = hmsToSeconds(tempoInicialRaw);
         const targetRate = parseFloat(velocidadeRaw);
@@ -115,25 +107,23 @@ class LePlayer extends HTMLElement {
             const enforcer = setInterval(() => {
                 attempts++;
                 let needs = false;
-                if (!isNaN(targetRate) && targetRate>0 && Math.abs(player.playbackRate - targetRate)>0.01) {
-                    player.playbackRate = targetRate; player.defaultPlaybackRate = targetRate; needs = true;
+                if (!isNaN(targetRate) && targetRate>0 && Math.abs(vidstackPlayer.playbackRate - targetRate)>0.01) {
+                    vidstackPlayer.playbackRate = targetRate; vidstackPlayer.defaultPlaybackRate = targetRate; needs = true;
                 }
-                if (!isNaN(targetSec) && targetSec>0 && Math.abs(player.currentTime - targetSec)>0.5 && !player.live) {
-                    if (player.currentTime < targetSec+2) player.currentTime = targetSec; needs = true;
+                if (!isNaN(targetSec) && targetSec>0 && Math.abs(vidstackPlayer.currentTime - targetSec)>0.5 && !vidstackPlayer.live) {
+                    if (vidstackPlayer.currentTime < targetSec+2) vidstackPlayer.currentTime = targetSec; needs = true;
                 }
                 if (attempts>=max) clearInterval(enforcer);
                 else if (!needs && attempts>8) clearInterval(enforcer);
             },200);
         }
 
-        // Legendas
-        player.addEventListener('provider-change', () => {
+        vidstackPlayer.addEventListener('provider-change', () => {
             if (legendaUrl && legendaUrl!=='URL_DA_SUA_LEGENDA.vtt') {
-                player.textTracks.add({ src: legendaUrl, label: 'Ativado', kind: 'subtitles', language: 'auto', default: !ocultarLegendas });
+                vidstackPlayer.textTracks.add({ src: legendaUrl, label: 'Ativado', kind: 'subtitles', language: 'auto', default: !ocultarLegendas });
             }
         });
 
-        // Watermark (simplificado)
         setTimeout(() => {
             if (logoUrl && logoUrl.trim()) {
                 const wm = document.createElement('div');
@@ -141,11 +131,10 @@ class LePlayer extends HTMLElement {
                 wm.style.cssText = `position:absolute; bottom:48px; right:1.5%; width:10%; max-width:150px; aspect-ratio:2.5/1; background-image:url('${logoUrl}'); background-size:contain; background-repeat:no-repeat; z-index:9999; pointer-events:none; opacity:0; transition:0.3s;`;
                 containerEl.style.position = 'relative';
                 containerEl.appendChild(wm);
-                player.addEventListener('time-update', () => { wm.style.opacity = player.currentTime <= 0.1 ? '0' : '0.7'; });
+                vidstackPlayer.addEventListener('time-update', () => { wm.style.opacity = vidstackPlayer.currentTime <= 0.1 ? '0' : '0.7'; });
             }
         }, 500);
 
-        // Botão YouTube
         setTimeout(() => {
             const inject = () => {
                 const bar = document.querySelector('#temp-player .plyr__controls');
