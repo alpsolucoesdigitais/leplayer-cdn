@@ -406,6 +406,44 @@ class LePlayer extends HTMLElement {
       const i = setInterval(() => { if(inject()) clearInterval(i); }, 200);
       setTimeout(() => clearInterval(i), 5000);
     }, 500);
+
+
+    // Força aplicação do raio da borda (igual ao script original)
+    function applyBorderRadius() {
+    const el = document.getElementById('temp-player');
+    if (!el) return false;
+
+    const raw = config['raio_borda'];
+    const s = (raw === undefined || raw === null) ? '' : String(raw).trim();
+    const normalized = (function(v) {
+        if (v === '') return '0px';
+        if (/^\d+(\.\d+)?\s*(px|rem|%)?$/.test(v)) {
+            return /[a-z%]/i.test(v) ? v.replace(/\s+/g, '') : `${v}px`;
+        }
+        return v;
+    })(s);
+
+    el.style.setProperty('--plyr-border-radius', normalized, 'important');
+    el.style.setProperty('border-radius', normalized, 'important');
+    el.style.overflow = 'hidden';
+
+    return true;
+    }
+
+    let attemptsBorder = 0;
+    const maxBorderAttempts = 20;
+    const borderInterval = setInterval(() => {
+      if (applyBorderRadius()) {
+        clearInterval(borderInterval);
+        } else if (++attemptsBorder >= maxBorderAttempts) {
+        clearInterval(borderInterval);
+        }
+      }, 200);
+      setTimeout(() => clearInterval(borderInterval), 5000);
+
+
+
+
   }
 }
 customElements.define('le-player', LePlayer);
