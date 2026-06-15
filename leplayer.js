@@ -30,10 +30,10 @@ class LePlayer extends HTMLElement {
     const { PlyrLayout, VidstackPlayer, setupGestures } = module;
 
     // Extrai configurações do banco
-    const srcVideo = config?.['videosrc'];
+    const srcVideo = `youtube/${videoId}`;
     const posterVideo = config?.['poster'];
-    const tituloVideo = config?.['nome_player'] || 'Player Customizável';
-    const ytSource = config?.['url_youtube'];
+    const tituloVideo = config?.['nome_player'] || 'Vídeo';
+    const ytSource = `https://www.youtube.com/watch?v=${videoId}`;
     const isAutoplay = config?.['autoplay'] || false;
     const isLoop = config?.['forcar_loop'] || false;
     const inicioMudo = config?.['iniciar_mudo'] || false;
