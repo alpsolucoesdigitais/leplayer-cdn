@@ -349,6 +349,32 @@ class LePlayer extends HTMLElement {
     window.meuPlayerVidstack = vidstackPlayer;
     setupGestures(vidstackPlayer);
 
+    // Injeção manual do botão stop
+    if (ativarBotaoStop) {
+    const stopBtnId = 'vidstack-custom-stop-btn';
+    const injectStop = () => {
+        const playBtn = document.querySelector('#temp-player .plyr__controls [data-plyr="play"]');
+        if (!playBtn) return false;
+        if (document.getElementById(stopBtnId)) return true;
+        const stopBtn = document.createElement('button');
+        stopBtn.id = stopBtnId;
+        stopBtn.type = 'button';
+        stopBtn.className = 'plyr__controls__item plyr__control';
+        stopBtn.setAttribute('aria-label', 'Stop');
+        stopBtn.innerHTML = `<svg viewBox="0 0 18 18"><rect x="2" y="2" width="14" height="14" fill="currentColor"></rect></svg><span class="plyr__tooltip" role="tooltip">Parar</span>`;
+        stopBtn.onclick = () => {
+            if (window.meuPlayerVidstack) {
+                window.meuPlayerVidstack.pause();
+                window.meuPlayerVidstack.currentTime = 0;
+            }
+        };
+        playBtn.insertAdjacentElement('afterend', stopBtn);
+        return true;
+    };
+    const stopInterval = setInterval(() => { if (injectStop()) clearInterval(stopInterval); }, 200);
+    setTimeout(() => clearInterval(stopInterval), 5000);
+    }
+
     // Enforcer de tempo/velocidade
     function hmsToSeconds(str) { if (!str) return 0; const p = str.split(':'); let s=0, m=1; while(p.length) { s += m * parseInt(p.pop(),10); m*=60; } return s; }
     const targetSec = hmsToSeconds(tempoInicialRaw);
