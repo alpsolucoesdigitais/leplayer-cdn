@@ -313,7 +313,7 @@ class LePlayer extends HTMLElement {
       }
       ${ocultarControles ? '#temp-player .plyr__controls { display: none !important; }' : ''}
       ${ocultarBotaoCentral ? '#temp-player .plyr__control--overlaid { display: none !important; }' : ''}
-      ${ocultarTempoVideo ? '#temp-player .plyr__progress, #temp-player .plyr__duration, #temp-player .plyr__current-time { display: none !important; }' : ''}
+      ${ocultarTempoVideo ? '#temp-player .plyr__time { display: none !important; }' : ''}
       ${ocultarVolume ? '#temp-player .plyr__volume { display: none !important; }' : ''}
       ${ocultarLegendas ? '#temp-player .plyr__menu--captions { display: none !important; }' : ''}
       ${ocultarConfiguracoes ? '#temp-player .plyr__settings { display: none !important; }' : ''}
