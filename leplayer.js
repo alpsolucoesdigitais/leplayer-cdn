@@ -316,7 +316,7 @@ class LePlayer extends HTMLElement {
       ${ocultarTempoVideo ? '#temp-player .plyr__time { display: none !important; }' : ''}
       ${ocultarVolume ? '#temp-player .plyr__volume { display: none !important; }' : ''}
       ${ocultarLegendas ? '#temp-player [data-plyr="captions"] { display: none !important; }' : ''}
-      ${ocultarConfiguracoes ? '#temp-player .plyr__settings { display: none !important; }' : ''}
+      ${ocultarConfiguracoes ? '#temp-player [data-plyr="settings"] { display: none !important; }' : ''}
       ${desabilitarTelaCheia ? '#temp-player .plyr__fullscreen { display: none !important; }' : ''}
       ${!ativarVoltarAvancar ? '#temp-player .plyr__rewind, #temp-player .plyr__fast-forward { display: none !important; }' : ''}
     `;
