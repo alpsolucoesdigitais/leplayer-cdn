@@ -375,16 +375,54 @@ class LePlayer extends HTMLElement {
     setTimeout(() => clearInterval(stopInterval), 5000);
     }
 
-    // Injeção manual do botão de loop
+    // Injeção manual do botão de loop (com SVG direto)
     if (ativarBotaoLoop) {
     const loopBtnId = 'vidstack-custom-loop-btn';
     let isClicking = false;
+
+    // Updater de cores (sincroniza cor principal/secundária e estado)
+    if (!window.loopIconColorUpdaterNovoPlayer) {
+        window.loopIconColorUpdaterNovoPlayer = setInterval(() => {
+            if (isClicking) return;
+
+            const loopBtn = document.getElementById(loopBtnId);
+            const container = document.getElementById('temp-player');
+            if (!loopBtn || loopBtn.style.display === 'none' || !container?.contains(loopBtn)) return;
+
+            const corPrincipal = config?.['cor_principal'] || '#4755F2';
+            const corSecundaria = config?.['cor_secundaria'] || '#ffffff';
+
+            const icon = loopBtn.querySelector('svg');
+            if (icon && icon.style.fill !== corSecundaria) {
+                icon.style.fill = corSecundaria;
+            }
+
+            let dynamicStyle = document.getElementById('vidstack-loop-btn-colors-temp-player');
+            if (!dynamicStyle) {
+                dynamicStyle = document.createElement('style');
+                dynamicStyle.id = 'vidstack-loop-btn-colors-temp-player';
+                document.head.appendChild(dynamicStyle);
+            }
+
+            const newCSS = `
+                #temp-player button#${loopBtnId}.plyr__control:hover {
+                    background-color: ${corPrincipal} !important;
+                }
+                #temp-player button#${loopBtnId}.plyr__control[aria-pressed="true"] {
+                    background-color: ${corPrincipal} !important;
+                }
+            `;
+
+            if (dynamicStyle.innerHTML !== newCSS) {
+                dynamicStyle.innerHTML = newCSS;
+            }
+        }, 100);
+    }
 
     const injectLoop = () => {
         const controlsBar = document.querySelector('#temp-player .plyr__controls');
         if (!controlsBar) return false;
 
-        // Referência para posicionar o botão
         const forwardBtn = document.querySelector('#temp-player .plyr__controls [data-plyr="fast-forward"]');
         const rewindBtn = document.querySelector('#temp-player .plyr__controls [data-plyr="rewind"]');
         const stopBtn = document.getElementById('vidstack-custom-stop-btn');
@@ -398,7 +436,7 @@ class LePlayer extends HTMLElement {
             if (window.meuPlayerVidstack) {
                 const estadoReal = window.meuPlayerVidstack.loop;
                 loopBtn.setAttribute('aria-pressed', estadoReal);
-                loopBtn.style.backgroundColor = estadoReal ? corPrincipal : 'transparent';
+                loopBtn.style.backgroundColor = estadoReal ? (config?.['cor_principal'] || '#4755F2') : 'transparent';
             }
             return true;
         }
@@ -417,27 +455,19 @@ class LePlayer extends HTMLElement {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            width: '30px',
-            height: '30px',
+            width: '32px',
+            height: '32px',
             padding: '0',
-            opacity: '1',
-            transition: 'background-color 0.2s ease',
-            backgroundColor: isLoopActive ? corPrincipal : 'transparent'
+            backgroundColor: isLoopActive ? (config?.['cor_principal'] || '#4755F2') : 'transparent'
         });
 
-        // Ícone (usando Material Symbols, mesmo do script original)
+        // Ícone SVG (mesmo do script original)
         loopBtn.innerHTML = `
-            <span class="material-symbols-outlined" style="font-size: 18px; pointer-events: none; color: ${corSecundaria};">autorenew</span>
+            <svg viewBox="0 0 18 18" role="presentation" focusable="false" style="width:18px; height:18px; pointer-events:none; fill: ${config?.['cor_secundaria'] || '#ffffff'};">
+                <path d="M9 1C4.6 1 1 4.6 1 9s3.6 8 8 8 8-3.6 8-8h-2c0 3.3-2.7 6-6 6s-6-2.7-6-6 2.7-6 6-6v3l5-4-5-4v3z"></path>
+            </svg>
             <span class="plyr__tooltip" role="tooltip">Loop</span>
         `;
-
-        // Carrega a fonte de ícones se ainda não existir
-        if (!document.querySelector('link[href*="material-symbols-outlined"]')) {
-            const link = document.createElement('link');
-            link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200';
-            link.rel = 'stylesheet';
-            document.head.appendChild(link);
-        }
 
         loopBtn.onclick = () => {
             if (window.meuPlayerVidstack) {
@@ -445,18 +475,18 @@ class LePlayer extends HTMLElement {
                 const newLoopState = !window.meuPlayerVidstack.loop;
                 window.meuPlayerVidstack.loop = newLoopState;
                 loopBtn.setAttribute('aria-pressed', newLoopState);
-                loopBtn.style.backgroundColor = newLoopState ? corPrincipal : 'transparent';
+                loopBtn.style.backgroundColor = newLoopState ? (config?.['cor_principal'] || '#4755F2') : 'transparent';
                 setTimeout(() => { isClicking = false; }, 250);
             }
         };
 
         lastNavBtn.insertAdjacentElement('afterend', loopBtn);
 
-        // Sincroniza com o estado de forçar loop (se ativado no banco)
+        // Sincroniza com forçar loop
         if (window.meuPlayerVidstack && config?.['forcar_loop']) {
             window.meuPlayerVidstack.loop = true;
             loopBtn.setAttribute('aria-pressed', 'true');
-            loopBtn.style.backgroundColor = corPrincipal;
+            loopBtn.style.backgroundColor = config?.['cor_principal'] || '#4755F2';
         }
 
         return true;
@@ -467,7 +497,6 @@ class LePlayer extends HTMLElement {
     }, 200);
     setTimeout(() => clearInterval(loopInterval), 5000);
     }
-
 
 
     // Injeção manual dos botões de avançar/voltar (seek)
