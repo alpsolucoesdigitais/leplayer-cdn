@@ -375,6 +375,101 @@ class LePlayer extends HTMLElement {
     setTimeout(() => clearInterval(stopInterval), 5000);
     }
 
+    // Injeção manual do botão de loop
+    if (ativarBotaoLoop) {
+    const loopBtnId = 'vidstack-custom-loop-btn';
+    let isClicking = false;
+
+    const injectLoop = () => {
+        const controlsBar = document.querySelector('#temp-player .plyr__controls');
+        if (!controlsBar) return false;
+
+        // Referência para posicionar o botão
+        const forwardBtn = document.querySelector('#temp-player .plyr__controls [data-plyr="fast-forward"]');
+        const rewindBtn = document.querySelector('#temp-player .plyr__controls [data-plyr="rewind"]');
+        const stopBtn = document.getElementById('vidstack-custom-stop-btn');
+        const playBtn = document.querySelector('#temp-player .plyr__controls [data-plyr="play"]');
+        const lastNavBtn = forwardBtn || rewindBtn || stopBtn || playBtn;
+        if (!lastNavBtn) return false;
+
+        let loopBtn = document.getElementById(loopBtnId);
+        if (loopBtn) {
+            loopBtn.style.display = 'flex';
+            if (window.meuPlayerVidstack) {
+                const estadoReal = window.meuPlayerVidstack.loop;
+                loopBtn.setAttribute('aria-pressed', estadoReal);
+                loopBtn.style.backgroundColor = estadoReal ? corPrincipal : 'transparent';
+            }
+            return true;
+        }
+
+        // Cria o botão
+        loopBtn = document.createElement('button');
+        loopBtn.id = loopBtnId;
+        loopBtn.type = 'button';
+        loopBtn.className = 'plyr__controls__item plyr__control';
+        loopBtn.setAttribute('aria-label', 'Loop');
+
+        const isLoopActive = window.meuPlayerVidstack ? window.meuPlayerVidstack.loop : false;
+        loopBtn.setAttribute('aria-pressed', isLoopActive);
+
+        Object.assign(loopBtn.style, {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '30px',
+            height: '30px',
+            padding: '0',
+            opacity: '1',
+            transition: 'background-color 0.2s ease',
+            backgroundColor: isLoopActive ? corPrincipal : 'transparent'
+        });
+
+        // Ícone (usando Material Symbols, mesmo do script original)
+        loopBtn.innerHTML = `
+            <span class="material-symbols-outlined" style="font-size: 18px; pointer-events: none; color: ${corSecundaria};">autorenew</span>
+            <span class="plyr__tooltip" role="tooltip">Loop</span>
+        `;
+
+        // Carrega a fonte de ícones se ainda não existir
+        if (!document.querySelector('link[href*="material-symbols-outlined"]')) {
+            const link = document.createElement('link');
+            link.href = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200';
+            link.rel = 'stylesheet';
+            document.head.appendChild(link);
+        }
+
+        loopBtn.onclick = () => {
+            if (window.meuPlayerVidstack) {
+                isClicking = true;
+                const newLoopState = !window.meuPlayerVidstack.loop;
+                window.meuPlayerVidstack.loop = newLoopState;
+                loopBtn.setAttribute('aria-pressed', newLoopState);
+                loopBtn.style.backgroundColor = newLoopState ? corPrincipal : 'transparent';
+                setTimeout(() => { isClicking = false; }, 250);
+            }
+        };
+
+        lastNavBtn.insertAdjacentElement('afterend', loopBtn);
+
+        // Sincroniza com o estado de forçar loop (se ativado no banco)
+        if (window.meuPlayerVidstack && config?.['forcar_loop']) {
+            window.meuPlayerVidstack.loop = true;
+            loopBtn.setAttribute('aria-pressed', 'true');
+            loopBtn.style.backgroundColor = corPrincipal;
+        }
+
+        return true;
+    };
+
+    const loopInterval = setInterval(() => {
+        if (injectLoop()) clearInterval(loopInterval);
+    }, 200);
+    setTimeout(() => clearInterval(loopInterval), 5000);
+    }
+
+
+
     // Injeção manual dos botões de avançar/voltar (seek)
     if (ativarVoltarAvancar) {
     const rewindBtnId = 'vidstack-custom-rewind-btn';
