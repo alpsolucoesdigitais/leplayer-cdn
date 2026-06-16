@@ -317,7 +317,7 @@ class LePlayer extends HTMLElement {
       ${ocultarVolume ? '#temp-player .plyr__volume { display: none !important; }' : ''}
       ${ocultarLegendas ? '#temp-player [data-plyr="captions"] { display: none !important; }' : ''}
       ${ocultarConfiguracoes ? '#temp-player [data-plyr="settings"] { display: none !important; }' : ''}
-      ${desabilitarTelaCheia ? '#temp-player .plyr__fullscreen { display: none !important; }' : ''}
+      ${desabilitarTelaCheia ? '#temp-player [data-plyr="fullscreen"] { display: none !important; }' : ''}
       ${!ativarVoltarAvancar ? '#temp-player .plyr__rewind, #temp-player .plyr__fast-forward { display: none !important; }' : ''}
     `;
     document.head.appendChild(styleGlobal);
@@ -626,6 +626,63 @@ class LePlayer extends HTMLElement {
       const i = setInterval(() => { if(inject()) clearInterval(i); }, 200);
       setTimeout(() => clearInterval(i), 5000);
     }, 500);
+
+
+    // Controle de tela cheia (bloqueio + ocultação)
+    let fullscreenBlocked = false;
+
+    const applyFullscreen = () => {
+    const controlsBar = document.querySelector('#temp-player .plyr__controls');
+    if (!controlsBar) return false;
+
+    const fullscreenBtn = document.querySelector('#temp-player [data-plyr="fullscreen"]');
+    if (!fullscreenBtn) return false;
+
+    const desabilitar = config?.['desabilitar_tela-cheia'] ?? false;
+
+    if (desabilitar) {
+        // Bloqueia duplo clique
+        fullscreenBlocked = true;
+        // Oculta o botão
+        fullscreenBtn.style.setProperty('display', 'none', 'important');
+    } else {
+        fullscreenBlocked = false;
+        fullscreenBtn.style.setProperty('display', 'flex', 'important');
+    }
+
+    // Aplica o bloqueio ao elemento pai (para capturar duplo clique)
+    const container = document.getElementById('temp-player');
+    if (container) {
+        container.style.userSelect = 'none'; // apenas para garantir
+        // Remove listeners antigos para evitar duplicação
+        container.removeEventListener('dblclick', preventFullscreen);
+        if (fullscreenBlocked) {
+            container.addEventListener('dblclick', preventFullscreen);
+        }
+    }
+
+    return true;
+    };
+
+    // Função que previne a entrada em tela cheia
+    function preventFullscreen(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    // Se o player tentar entrar em fullscreen, cancela
+    if (window.meuPlayerVidstack && window.meuPlayerVidstack.isFullscreen) {
+        window.meuPlayerVidstack.exitFullscreen();
+    }
+    return false;
+    }
+
+    // Tenta aplicar com retry
+    const fullscreenInterval = setInterval(() => {
+    if (applyFullscreen()) {
+        clearInterval(fullscreenInterval);
+      }
+    }, 200);
+    setTimeout(() => clearInterval(fullscreenInterval), 5000);
+
 
 
     // Força aplicação do raio da borda (igual ao script original)
