@@ -629,59 +629,33 @@ class LePlayer extends HTMLElement {
 
 
     // Controle de tela cheia (bloqueio + ocultação)
-    let fullscreenBlocked = false;
-
-    const applyFullscreen = () => {
+    function applyFullscreenSettings() {
     const controlsBar = document.querySelector('#temp-player .plyr__controls');
     if (!controlsBar) return false;
+
+    const desabilitarTelaCheia = config?.['desabilitar_tela-cheia'] ?? false;
 
     const fullscreenBtn = document.querySelector('#temp-player [data-plyr="fullscreen"]');
     if (!fullscreenBtn) return false;
 
-    const desabilitar = config?.['desabilitar_tela-cheia'] ?? false;
-
-    if (desabilitar) {
-        // Bloqueia duplo clique
-        fullscreenBlocked = true;
-        // Oculta o botão
+    if (desabilitarTelaCheia) {
+        window.lePlayerFullscreenBlocked = true;
         fullscreenBtn.style.setProperty('display', 'none', 'important');
     } else {
-        fullscreenBlocked = false;
+        window.lePlayerFullscreenBlocked = false;
         fullscreenBtn.style.setProperty('display', 'flex', 'important');
     }
 
-    // Aplica o bloqueio ao elemento pai (para capturar duplo clique)
-    const container = document.getElementById('temp-player');
-    if (container) {
-        container.style.userSelect = 'none'; // apenas para garantir
-        // Remove listeners antigos para evitar duplicação
-        container.removeEventListener('dblclick', preventFullscreen);
-        if (fullscreenBlocked) {
-            container.addEventListener('dblclick', preventFullscreen);
-        }
-    }
-
     return true;
-    };
-
-    // Função que previne a entrada em tela cheia
-    function preventFullscreen(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    // Se o player tentar entrar em fullscreen, cancela
-    if (window.meuPlayerVidstack && window.meuPlayerVidstack.isFullscreen) {
-        window.meuPlayerVidstack.exitFullscreen();
-    }
-    return false;
     }
 
-    // Tenta aplicar com retry
-    const fullscreenInterval = setInterval(() => {
-    if (applyFullscreen()) {
-        clearInterval(fullscreenInterval);
-      }
+    const tentativaTelaCheia = setInterval(() => {
+    if (applyFullscreenSettings()) {
+        clearInterval(tentativaTelaCheia);
+    }
     }, 200);
-    setTimeout(() => clearInterval(fullscreenInterval), 5000);
+
+    setTimeout(() => clearInterval(tentativaTelaCheia), 5000);
 
 
 
