@@ -375,6 +375,76 @@ class LePlayer extends HTMLElement {
     setTimeout(() => clearInterval(stopInterval), 5000);
     }
 
+    // Injeção manual dos botões de avançar/voltar (seek)
+    if (ativarVoltarAvancar) {
+    const rewindBtnId = 'vidstack-custom-rewind-btn';
+    const forwardBtnId = 'vidstack-custom-forward-btn';
+
+    const injectSeek = () => {
+        const controlsBar = document.querySelector('#temp-player .plyr__controls');
+        if (!controlsBar) return false;
+
+        const stopBtn = document.getElementById('vidstack-custom-stop-btn');
+        const isStopVisible = stopBtn && stopBtn.style.display !== 'none';
+        const referenceBtn = isStopVisible
+            ? stopBtn
+            : document.querySelector('#temp-player .plyr__controls [data-plyr="play"]');
+
+        if (!referenceBtn) return false;
+
+        let rewindBtn = document.getElementById(rewindBtnId);
+        if (rewindBtn) {
+            rewindBtn.style.display = 'flex';
+        } else {
+            rewindBtn = document.createElement('button');
+            rewindBtn.id = rewindBtnId;
+            rewindBtn.type = 'button';
+            rewindBtn.className = 'plyr__controls__item plyr__control';
+            rewindBtn.setAttribute('aria-label', 'Voltar 10 segundos');
+            rewindBtn.innerHTML = `
+                <svg viewBox="0 0 18 18"><path d="M16.5 2.5V15.5L9.5 9L16.5 2.5Z" fill="currentColor" opacity="0.6"></path><path d="M9.5 2.5V15.5L2.5 9L9.5 2.5Z" fill="currentColor"></path></svg>
+                <span class="plyr__tooltip" role="tooltip">Voltar 10 seg.</span>
+            `;
+            rewindBtn.onclick = () => {
+                if (window.meuPlayerVidstack) {
+                    window.meuPlayerVidstack.currentTime = Math.max(0, window.meuPlayerVidstack.currentTime - 10);
+                }
+            };
+            referenceBtn.insertAdjacentElement('afterend', rewindBtn);
+        }
+
+        let forwardBtn = document.getElementById(forwardBtnId);
+        if (forwardBtn) {
+            forwardBtn.style.display = 'flex';
+        } else {
+            forwardBtn = document.createElement('button');
+            forwardBtn.id = forwardBtnId;
+            forwardBtn.type = 'button';
+            forwardBtn.className = 'plyr__controls__item plyr__control';
+            forwardBtn.setAttribute('aria-label', 'Avançar 10 segundos');
+            forwardBtn.innerHTML = `
+                <svg viewBox="0 0 18 18"><path d="M1.5 2.5V15.5L8.5 9L1.5 2.5Z" fill="currentColor" opacity="0.6"></path><path d="M8.5 2.5V15.5L15.5 9L8.5 2.5Z" fill="currentColor"></path></svg>
+                <span class="plyr__tooltip" role="tooltip">Avançar 10 seg.</span>
+            `;
+            forwardBtn.onclick = () => {
+                if (window.meuPlayerVidstack) {
+                    const duration = window.meuPlayerVidstack.duration;
+                    window.meuPlayerVidstack.currentTime = Math.min(duration, window.meuPlayerVidstack.currentTime + 10);
+                }
+            };
+            rewindBtn.insertAdjacentElement('afterend', forwardBtn);
+        }
+
+        return true;
+    };
+
+    const seekInterval = setInterval(() => {
+        if (injectSeek()) clearInterval(seekInterval);
+    }, 200);
+    setTimeout(() => clearInterval(seekInterval), 5000);
+    }
+    
+
     // Enforcer de tempo/velocidade
     function hmsToSeconds(str) { if (!str) return 0; const p = str.split(':'); let s=0, m=1; while(p.length) { s += m * parseInt(p.pop(),10); m*=60; } return s; }
     const targetSec = hmsToSeconds(tempoInicialRaw);
