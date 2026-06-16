@@ -45,6 +45,7 @@ class LePlayer extends HTMLElement {
     const ocultarVolume = config?.['ocultar_ctrl_vol'] || false;
     const ocultarLegendas = config?.['ocultar_btn_legendas'] || false;
     const ocultarConfiguracoes = config?.['ocultar_configs'] || false;
+    const ocultarBotaoYT = config?.['ocultar_btn_yt'] ?? false;
     const desabilitarTelaCheia = config?.['desabilitar_tela-cheia'] || false;
     const ativarBotaoLoop = config?.['btn_loop'] || false;
     const ativarBotaoStop = config?.['btn_stop'] || false;
@@ -612,7 +613,7 @@ class LePlayer extends HTMLElement {
     setTimeout(() => {
       const inject = () => {
         const bar = document.querySelector('#temp-player .plyr__controls');
-        if (bar && ytSource && !document.getElementById('yt-btn')) {
+        if (bar && ytSource && !document.getElementById('yt-btn') && !ocultarBotaoYT) {
           const btn = document.createElement('button');
           btn.id = 'yt-btn';
           btn.className = 'plyr__controls__item plyr__control';
