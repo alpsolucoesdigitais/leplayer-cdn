@@ -303,15 +303,7 @@ class LePlayer extends HTMLElement {
         --plyr-video-control-color: ${corSecundaria};
         --plyr-video-control-color-hover: ${corSecundaria}
       }
-      ::cue {
-        font-family: '${fonteLegenda}', sans-serif;
-        font-size: ${tamanhoLegenda === 'xlarge' ? '1.5em' : tamanhoLegenda === 'large' ? '1.2em' : '1em'};
-        color: ${corLegenda} !important;
-        background-color: ${corBgLegenda}${Math.round(opacidadeBgLegenda * 255).toString(16).padStart(2, '0')} !important;
-        font-weight: ${negritoLegenda ? 'bold' : 'normal'};
-        font-style: ${italicoLegenda ? 'italic' : 'normal'};
-        text-decoration: ${sublinhadoLegenda ? 'underline' : 'none'};
-      }
+      
       ${ocultarControles ? '#temp-player .plyr__controls { display: none !important; }' : ''}
       ${ocultarBotaoCentral ? '#temp-player .plyr__control--overlaid { display: none !important; }' : ''}
       ${ocultarTempoVideo ? '#temp-player .plyr__time { display: none !important; }' : ''}
@@ -369,6 +361,96 @@ class LePlayer extends HTMLElement {
     });
     window.meuPlayerVidstack = vidstackPlayer;
     setupGestures(vidstackPlayer);
+
+    // --- Aplica estilos de legendas ---
+    function applyCaptionStyles() {
+    // Limpa estilos anteriores
+    const oldStyle = document.getElementById('custom-caption-style');
+    if (oldStyle) oldStyle.remove();
+
+    const captionConfig = {
+        font: config?.['fonte_legenda'] || 'Roboto',
+        bold: config?.['negrito'] ?? false,
+        italic: config?.['italico'] ?? false,
+        underline: config?.['sublinhado'] ?? false,
+        size: config?.['tamanho_legenda'] || 'medium',
+        textColor: config?.['cor_legenda'] || '#FFFFFF',
+        colorBG: config?.['cor_bg_legenda'] || '#000000',
+        opacityBG: config?.['opacidade_bg_legenda'] ?? 0.75
+    };
+
+    const sizePixelMap = { 'small': '14px', 'medium': '18px', 'large': '24px', 'xlarge': '32px' };
+    const fw = captionConfig.bold ? '700' : '400';
+    const fs = captionConfig.italic ? 'italic' : 'normal';
+    const td = captionConfig.underline ? 'underline' : 'none';
+    const fSize = sizePixelMap[captionConfig.size] || '18px';
+
+    // Calcula cor de fundo com opacidade
+    let r = 0, g = 0, b = 0;
+    let hex = captionConfig.colorBG.replace('#', '');
+    if (hex.length === 3) {
+        r = parseInt(hex[0] + hex[0], 16);
+        g = parseInt(hex[1] + hex[1], 16);
+        b = parseInt(hex[2] + hex[2], 16);
+    } else {
+        r = parseInt(hex.substring(0, 2), 16);
+        g = parseInt(hex.substring(2, 4), 16);
+        b = parseInt(hex.substring(4, 6), 16);
+    }
+    const finalBG = `rgba(${r}, ${g}, ${b}, ${captionConfig.opacityBG})`;
+
+    // Carrega a fonte do Google Fonts
+    const fontId = 'custom-caption-font-' + captionConfig.font.replace(/\s+/g, '-');
+    if (!document.getElementById(fontId)) {
+        const link = document.createElement('link');
+        link.id = fontId;
+        link.rel = 'stylesheet';
+        link.href = `https://fonts.googleapis.com/css2?family=${captionConfig.font.replace(/\s+/g, '+')}:wght@400;700&display=swap`;
+        document.head.appendChild(link);
+    }
+
+    // Cria o estilo
+    const style = document.createElement('style');
+    style.id = 'custom-caption-style';
+    style.textContent = `
+        #temp-player ::cue, #temp-player video::cue {
+            font-family: '${captionConfig.font}', sans-serif !important;
+            font-weight: ${fw} !important;
+            font-style: ${fs} !important;
+            text-decoration: ${td} !important;
+            font-size: ${fSize} !important;
+            color: ${captionConfig.textColor} !important;
+            background-color: ${finalBG} !important;
+        }
+        #temp-player .plyr__caption:empty,
+        #temp-player .plyr__caption__text:empty {
+            display: none !important;
+            opacity: 0 !important;
+            background: transparent !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        #temp-player .plyr__caption, #temp-player .plyr__caption__text {
+            font-family: '${captionConfig.font}', sans-serif !important;
+            font-weight: ${fw} !important;
+            font-style: ${fs} !important;
+            text-decoration: ${td} !important;
+            font-size: ${fSize} !important;
+            color: ${captionConfig.textColor} !important;
+            background: ${finalBG} !important;
+            line-height: 1.4 !important;
+            padding: 4px 10px !important;
+            border-radius: 4px !important;
+            display: inline-block !important;
+        }
+    `;
+    document.head.appendChild(style);
+  }
+
+
+  setTimeout(() => {
+    applyCaptionStyles();
+  }, 100);
 
     // Injeção manual do botão stop
     if (ativarBotaoStop) {
