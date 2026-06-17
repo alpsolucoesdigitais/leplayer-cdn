@@ -320,6 +320,26 @@ class LePlayer extends HTMLElement {
       ${ocultarConfiguracoes ? '#temp-player [data-plyr="settings"] { display: none !important; }' : ''}
       ${desabilitarTelaCheia ? '#temp-player [data-plyr="fullscreen"] { display: none !important; }' : ''}
       ${!ativarVoltarAvancar ? '#temp-player .plyr__rewind, #temp-player .plyr__fast-forward { display: none !important; }' : ''}
+
+      /* Watermark via CSS (fundo da barra de controles) */
+      .custom-watermark {
+        display: none !important;
+      }
+
+      .plyr--video .plyr__controls {
+        background: url('${logoUrl}') 96.5% 0px no-repeat,
+          linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .5)) !important;
+          background-size: 100px auto, auto !important;
+        }
+
+    @media (max-width: 480px) {
+      .plyr--video .plyr__controls {
+      background: url('${logoUrl}') 96.5% 0px no-repeat,
+                linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, .5)) !important;
+      background-size: 53px auto, auto !important;
+      }
+    }
+
     `;
     document.head.appendChild(styleGlobal);
 
@@ -597,18 +617,7 @@ class LePlayer extends HTMLElement {
       }
     });
 
-    // Watermark
-    setTimeout(() => {
-      if (logoUrl && logoUrl.trim()) {
-        const wm = document.createElement('div');
-        wm.className = 'custom-watermark';
-        wm.style.cssText = `position:absolute; bottom:48px; right:1.5%; width:10%; max-width:150px; aspect-ratio:2.5/1; background-image:url('${logoUrl}'); background-size:contain; background-repeat:no-repeat; z-index:9999; pointer-events:none; opacity:0; transition:0.3s;`;
-        containerEl.style.position = 'relative';
-        containerEl.appendChild(wm);
-        vidstackPlayer.addEventListener('time-update', () => { wm.style.opacity = vidstackPlayer.currentTime <= 0.1 ? '0' : '0.7'; });
-      }
-    }, 500);
-
+   
     // Botão YouTube
     setTimeout(() => {
       const inject = () => {
