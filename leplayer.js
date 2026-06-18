@@ -384,6 +384,18 @@ setTimeout(() => clearInterval(tentativaMudo), 10000);
 
 
     setupGestures(vidstackPlayer);
+    
+  // BLOQUEIA TECLAS QUANDO FOCO EM INPUT
+window.addEventListener('keydown', (e) => {
+  const tag = document.activeElement?.tagName?.toLowerCase();
+  const isEditable = document.activeElement?.isContentEditable;
+  
+  if (tag === 'input' || tag === 'textarea' || tag === 'select' || isEditable) {
+    e.stopImmediatePropagation();
+  }
+}, true);
+
+
 
   // IMPEDIR NAVEGAÇÃO
 const tentativaNavegacao = setInterval(() => {
