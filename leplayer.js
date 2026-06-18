@@ -361,13 +361,17 @@ class LePlayer extends HTMLElement {
       layout: new PlyrLayout({ speed: [0.5,0.75,1,1.25,1.5,2], thumbnails: '', ...(ativarBotaoStop && { stopButton: true }), ...(ativarBotaoLoop && { loopButton: true }) })
     });
     window.meuPlayerVidstack = vidstackPlayer;
+
+    // INICIO MUDO
     
-   setTimeout(() => {
-  if (inicioMudo) {
-    vidstackPlayer.muted = true;
-    console.log('muted após set:', vidstackPlayer.muted);
-  }
-}, 500);
+    vidstackPlayer.addEventListener('provider-change', () => {
+      if (inicioMudo) {
+      setTimeout(() => {
+        vidstackPlayer.muted = true;
+        console.log('muted após provider-change:', vidstackPlayer.muted);
+      }, 300);
+    }
+    });
 
     setupGestures(vidstackPlayer);
 
