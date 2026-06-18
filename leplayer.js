@@ -751,22 +751,16 @@ setTimeout(() => clearInterval(tentativaNavegacao), 10000);
     }
     
 
-    // TEMPO INICIAL
+    /// TEMPO INICIAL
 function hmsToSeconds(str) { if (!str) return 0; const p = str.split(':'); let s=0, m=1; while(p.length) { s += m * parseInt(p.pop(),10); m*=60; } return s; }
 
-const tentativaTempo = setInterval(() => {
-  const player = window.meuPlayerVidstack;
-  if (!player) return;
+const timeInSeconds = hmsToSeconds(tempoInicialRaw);
 
-  const timeInSeconds = hmsToSeconds(tempoInicialRaw);
-  if (!isNaN(timeInSeconds) && timeInSeconds > 0) {
-    player.currentTime = timeInSeconds;
-  }
-
-  clearInterval(tentativaTempo);
-}, 3000);
-
-setTimeout(() => clearInterval(tentativaTempo), 15000);
+if (!isNaN(timeInSeconds) && timeInSeconds > 0) {
+  vidstackPlayer.addEventListener('can-play', () => {
+    vidstackPlayer.currentTime = timeInSeconds;
+  }, { once: true });
+}
 
 
 // VELOCIDADE
