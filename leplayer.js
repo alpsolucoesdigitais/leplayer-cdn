@@ -361,7 +361,10 @@ class LePlayer extends HTMLElement {
       layout: new PlyrLayout({ speed: [0.5,0.75,1,1.25,1.5,2], thumbnails: '', ...(ativarBotaoStop && { stopButton: true }), ...(ativarBotaoLoop && { loopButton: true }) })
     });
     window.meuPlayerVidstack = vidstackPlayer;
-    if (inicioMudo) vidstackPlayer.muted = true;
+    
+    setTimeout(() => {
+      if (inicioMudo) vidstackPlayer.muted = true;
+    }, 500);
 
     setupGestures(vidstackPlayer);
 
