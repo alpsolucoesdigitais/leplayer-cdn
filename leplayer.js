@@ -366,11 +366,7 @@ class LePlayer extends HTMLElement {
     
     // Aplica início mudo se a variável estiver true
     if (inicioMudo) {
-      setTimeout(() => {
-        vidstackPlayer.muted = true;
-        const videoEl = vidstackPlayer.el?.querySelector('video');
-        if (videoEl) videoEl.muted = true;
-      }, 200);
+    vidstackPlayer.muted = true;
     }
 
     // --- Aplica estilos de legendas ---
