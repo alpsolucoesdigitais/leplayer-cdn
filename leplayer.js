@@ -752,27 +752,19 @@ setTimeout(() => clearInterval(tentativaNavegacao), 10000);
     
 
     // TEMPO INICIAL
-function hmsToSeconds(str) { if (!str) return 0; const p = str.split(':'); let s=0, m=1; while(p.length) { s += m * parseInt(p.pop(),10); m*=60; } return s; }
+const tentativaTempo = setInterval(() => {
+  const player = window.meuPlayerVidstack;
+  if (!player) return;
 
-const timeInSeconds = hmsToSeconds(tempoInicialRaw);
-
-if (!isNaN(timeInSeconds) && timeInSeconds > 0) {
-  let applied = false;
-
-  const tentativaTempo = setInterval(() => {
-    if (applied) { clearInterval(tentativaTempo); return; }
-    const player = window.meuPlayerVidstack;
-    if (!player) return;
+  const timeInSeconds = hmsToSeconds(tempoInicialRaw);
+  if (!isNaN(timeInSeconds) && timeInSeconds > 0) {
     player.currentTime = timeInSeconds;
-    console.log('tempo via interval:', player.currentTime);
-    if (player.currentTime >= timeInSeconds - 1) {
-      applied = true;
-      clearInterval(tentativaTempo);
-    }
-  }, 100);
+  }
 
-  setTimeout(() => clearInterval(tentativaTempo), 15000);
-}
+  clearInterval(tentativaTempo);
+}, 1000);
+
+setTimeout(() => clearInterval(tentativaTempo), 10000);
 
 // VELOCIDADE
 const tentativaVelocidade = setInterval(() => {
