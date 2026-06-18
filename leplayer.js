@@ -363,10 +363,11 @@ class LePlayer extends HTMLElement {
 
     setupGestures(vidstackPlayer);
 
-    
-    // Aplica início mudo se a variável estiver true
+    // Inicio mudo
     if (inicioMudo) {
-    vidstackPlayer.muted = true;
+    vidstackPlayer.addEventListener('loaded-data', () => {
+        vidstackPlayer.muted = true;
+    });
     }
 
     // --- Aplica estilos de legendas ---
