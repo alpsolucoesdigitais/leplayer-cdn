@@ -769,7 +769,7 @@ if (!isNaN(timeInSeconds) && timeInSeconds > 0) {
       applied = true;
       clearInterval(tentativaTempo);
     }
-  }, 500);
+  }, 100);
 
   setTimeout(() => clearInterval(tentativaTempo), 15000);
 }
