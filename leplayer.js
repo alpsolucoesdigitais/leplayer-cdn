@@ -759,14 +759,6 @@ const timeInSeconds = hmsToSeconds(tempoInicialRaw);
 if (!isNaN(timeInSeconds) && timeInSeconds > 0) {
   let applied = false;
 
-  vidstackPlayer.addEventListener('can-play', () => {
-    if (!applied) {
-      applied = true;
-      vidstackPlayer.currentTime = timeInSeconds;
-      console.log('tempo via can-play:', vidstackPlayer.currentTime);
-    }
-  }, { once: true });
-
   const tentativaTempo = setInterval(() => {
     if (applied) { clearInterval(tentativaTempo); return; }
     const player = window.meuPlayerVidstack;
@@ -777,11 +769,10 @@ if (!isNaN(timeInSeconds) && timeInSeconds > 0) {
       applied = true;
       clearInterval(tentativaTempo);
     }
-  }, 2000);
+  }, 500);
 
   setTimeout(() => clearInterval(tentativaTempo), 15000);
 }
-
 
 // VELOCIDADE
 const tentativaVelocidade = setInterval(() => {
