@@ -764,9 +764,9 @@ const tentativaTempo = setInterval(() => {
   }
 
   clearInterval(tentativaTempo);
-}, 1000);
+}, 3000);
 
-setTimeout(() => clearInterval(tentativaTempo), 10000);
+setTimeout(() => clearInterval(tentativaTempo), 15000);
 
 
 // VELOCIDADE
