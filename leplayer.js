@@ -751,25 +751,38 @@ setTimeout(() => clearInterval(tentativaNavegacao), 10000);
     }
     
 
-    // Enforcer de tempo/velocidade
-    function hmsToSeconds(str) { if (!str) return 0; const p = str.split(':'); let s=0, m=1; while(p.length) { s += m * parseInt(p.pop(),10); m*=60; } return s; }
-    const targetSec = hmsToSeconds(tempoInicialRaw);
-    const targetRate = parseFloat(velocidadeRaw);
-    if (targetSec>0 || (targetRate>0 && targetRate!==1)) {
-      let attempts=0, max=20;
-      const enforcer = setInterval(() => {
-        attempts++;
-        let needs = false;
-        if (!isNaN(targetRate) && targetRate>0 && Math.abs(vidstackPlayer.playbackRate - targetRate)>0.01) {
-          vidstackPlayer.playbackRate = targetRate; vidstackPlayer.defaultPlaybackRate = targetRate; needs = true;
-        }
-        if (!isNaN(targetSec) && targetSec>0 && Math.abs(vidstackPlayer.currentTime - targetSec)>0.5 && !vidstackPlayer.live) {
-          if (vidstackPlayer.currentTime < targetSec+2) vidstackPlayer.currentTime = targetSec; needs = true;
-        }
-        if (attempts>=max) clearInterval(enforcer);
-        else if (!needs && attempts>8) clearInterval(enforcer);
-      },200);
-    }
+    // TEMPO INICIAL
+function hmsToSeconds(str) { if (!str) return 0; const p = str.split(':'); let s=0, m=1; while(p.length) { s += m * parseInt(p.pop(),10); m*=60; } return s; }
+
+const tentativaTempo = setInterval(() => {
+  const player = window.meuPlayerVidstack;
+  if (!player) return;
+
+  const timeInSeconds = hmsToSeconds(tempoInicialRaw);
+  if (!isNaN(timeInSeconds) && timeInSeconds > 0) {
+    player.currentTime = timeInSeconds;
+  }
+
+  clearInterval(tentativaTempo);
+}, 1000);
+
+setTimeout(() => clearInterval(tentativaTempo), 10000);
+
+
+// VELOCIDADE
+const tentativaVelocidade = setInterval(() => {
+  const player = window.meuPlayerVidstack;
+  if (!player) return;
+
+  const rate = parseFloat(velocidadeRaw);
+  if (!isNaN(rate) && rate > 0) {
+    player.playbackRate = rate;
+  }
+
+  clearInterval(tentativaVelocidade);
+}, 1000);
+
+setTimeout(() => clearInterval(tentativaVelocidade), 10000);
 
     // Legendas
     vidstackPlayer.addEventListener('provider-change', () => {
