@@ -363,38 +363,15 @@ class LePlayer extends HTMLElement {
 
     setupGestures(vidstackPlayer);
 
-    // Início mudo (adaptado do script original)
-    function applyMuted() {
-    const player = window.meuPlayerVidstack;
-    if (!player) return false;
-
-    const iniciarMudo = config?.['iniciar_mudo'] ?? false;
-    const videoElement = document.querySelector('#temp-player video');
-
-    if (iniciarMudo) {
-        player.muted = true;
-        if (videoElement) {
-            videoElement.muted = true;
-            videoElement.setAttribute('muted', '');
-        }
-    } else {
-        player.muted = false;
-        if (videoElement) {
-            videoElement.muted = false;
-            videoElement.removeAttribute('muted');
-        }
+    
+    // Aplica início mudo se a variável estiver true
+    if (inicioMudo) {
+      setTimeout(() => {
+        vidstackPlayer.muted = true;
+        const videoEl = vidstackPlayer.el?.querySelector('video');
+        if (videoEl) videoEl.muted = true;
+      }, 200);
     }
-
-    return true;
-  }
-
-  const tentativaMudo = setInterval(() => {
-    if (applyMuted()) {
-        clearInterval(tentativaMudo);
-    }
-  }, 200);
-
-setTimeout(() => clearInterval(tentativaMudo), 5000);
 
     // --- Aplica estilos de legendas ---
     function applyCaptionStyles() {
