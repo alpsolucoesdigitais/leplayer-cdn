@@ -363,25 +363,13 @@ class LePlayer extends HTMLElement {
     window.meuPlayerVidstack = vidstackPlayer;
 
     // INICIO MUDO
-    const tentativaMudo = setInterval(() => {
-  const player = window.meuPlayerVidstack;
-  const videoElement = document.querySelector('#temp-player video');
+    vidstackPlayer.addEventListener('playing', () => {
+      if (inicioMudo) {
+        vidstackPlayer.muted = true;
+        console.log('muted após playing:', vidstackPlayer.muted);
+      }
 
-  console.log('player:', !!player, '| muted antes:', player?.muted, '| videoElement:', !!videoElement);
-
-  if (!player) return;
-
-  if (inicioMudo) {
-    player.muted = true;
-    if (videoElement) {
-      videoElement.muted = true;
-      videoElement.setAttribute('muted', '');
-    }
-    console.log('muted após set:', player.muted);
-  }
-
-  clearInterval(tentativaMudo);
-}, 200);
+    }, { once: true });
 
     setupGestures(vidstackPlayer);
 
