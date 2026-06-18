@@ -366,7 +366,7 @@ class LePlayer extends HTMLElement {
 
 
     if (inicioMudo) {
-    vidstackPlayer.muted = true;
+    window.meuPlayerVidstack.muted = true;
     }
 
 
