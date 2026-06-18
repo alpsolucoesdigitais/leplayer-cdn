@@ -751,7 +751,7 @@ setTimeout(() => clearInterval(tentativaNavegacao), 10000);
     }
     
 
-    /// TEMPO INICIAL
+    // TEMPO INICIAL
 function hmsToSeconds(str) { if (!str) return 0; const p = str.split(':'); let s=0, m=1; while(p.length) { s += m * parseInt(p.pop(),10); m*=60; } return s; }
 
 const timeInSeconds = hmsToSeconds(tempoInicialRaw);
