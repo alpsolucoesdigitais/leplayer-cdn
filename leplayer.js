@@ -362,9 +362,12 @@ class LePlayer extends HTMLElement {
     });
     window.meuPlayerVidstack = vidstackPlayer;
     
-    setTimeout(() => {
-      if (inicioMudo) video.muted = true;
-    }, 500);
+   setTimeout(() => {
+  if (inicioMudo) {
+    vidstackPlayer.muted = true;
+    console.log('muted após set:', vidstackPlayer.muted);
+  }
+}, 500);
 
     setupGestures(vidstackPlayer);
 
