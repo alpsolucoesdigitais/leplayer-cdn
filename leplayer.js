@@ -377,7 +377,7 @@ class LePlayer extends HTMLElement {
     }
 
     clearInterval(tentativaMudo);
-    , 1000);
+  }, 1000);
 
     setTimeout(() => clearInterval(tentativaMudo), 10000);
 
