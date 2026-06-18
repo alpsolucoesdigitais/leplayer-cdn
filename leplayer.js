@@ -361,13 +361,41 @@ class LePlayer extends HTMLElement {
     });
     window.meuPlayerVidstack = vidstackPlayer;
 
-    // Fix início mudo
-    if (inicioMudo) {
-    vidstackPlayer.muted = true;
+    setupGestures(vidstackPlayer);
+
+    // --- Início mudo automático ---
+
+    function applyMuted() {
+      const player = window.meuPlayerVidstack;
+      if (!player) return false;
+
+      const iniciarMudo = config?.['iniciar_mudo'] ?? false;
+      const videoElement = document.querySelector('#temp-player video');
+
+      if (iniciarMudo) {
+        player.muted = true;
+        if (videoElement) {
+            videoElement.muted = true;
+            videoElement.setAttribute('muted', '');
+        }
+     } else {
+        player.muted = false;
+        if (videoElement) {
+            videoElement.muted = false;
+            videoElement.removeAttribute('muted');
+        }
+      }
+
+      return true;
     }
 
-    
-    setupGestures(vidstackPlayer);
+const tentativaMudo = setInterval(() => {
+    if (applyMuted()) {
+        clearInterval(tentativaMudo);
+    }
+}, 200);
+
+setTimeout(() => clearInterval(tentativaMudo), 5000);
 
     // --- Aplica estilos de legendas ---
     function applyCaptionStyles() {
