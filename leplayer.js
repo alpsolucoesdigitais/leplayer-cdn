@@ -365,6 +365,11 @@ class LePlayer extends HTMLElement {
     setupGestures(vidstackPlayer);
 
 
+    if (inicioMudo) {
+    vidstackPlayer.muted = true;
+    }
+
+
     // --- Aplica estilos de legendas ---
     function applyCaptionStyles() {
     // Limpa estilos anteriores
