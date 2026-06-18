@@ -757,9 +757,29 @@ function hmsToSeconds(str) { if (!str) return 0; const p = str.split(':'); let s
 const timeInSeconds = hmsToSeconds(tempoInicialRaw);
 
 if (!isNaN(timeInSeconds) && timeInSeconds > 0) {
+  let applied = false;
+
   vidstackPlayer.addEventListener('can-play', () => {
-    vidstackPlayer.currentTime = timeInSeconds;
+    if (!applied) {
+      applied = true;
+      vidstackPlayer.currentTime = timeInSeconds;
+      console.log('tempo via can-play:', vidstackPlayer.currentTime);
+    }
   }, { once: true });
+
+  const tentativaTempo = setInterval(() => {
+    if (applied) { clearInterval(tentativaTempo); return; }
+    const player = window.meuPlayerVidstack;
+    if (!player) return;
+    player.currentTime = timeInSeconds;
+    console.log('tempo via interval:', player.currentTime);
+    if (player.currentTime >= timeInSeconds - 1) {
+      applied = true;
+      clearInterval(tentativaTempo);
+    }
+  }, 2000);
+
+  setTimeout(() => clearInterval(tentativaTempo), 15000);
 }
 
 
