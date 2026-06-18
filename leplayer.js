@@ -385,6 +385,61 @@ setTimeout(() => clearInterval(tentativaMudo), 10000);
 
     setupGestures(vidstackPlayer);
 
+  // IMPEDIR NAVEGAÇÃO
+const tentativaNavegacao = setInterval(() => {
+  const playerContainer = document.getElementById('temp-player');
+  const player = window.meuPlayerVidstack;
+
+  if (!playerContainer || !player) return;
+
+  const impedirNavegacao = config?.['impedir_voltar-e-avancar'] ?? false;
+
+  const interactiveElements = playerContainer.querySelectorAll(
+    'media-gesture[action*="seek"], media-time-slider, .vds-gesture[action*="seek"], .vds-time-slider, .plyr__progress'
+  );
+
+  if (impedirNavegacao) {
+    window.lePlayerSeekBlocked = true;
+
+    interactiveElements.forEach(el => {
+      el.setAttribute('disabled', 'true');
+      el.style.pointerEvents = 'auto';
+      el.style.opacity = '1';
+      el.style.cursor = 'pointer';
+    });
+
+    window.blockVideoKeys = function(e) {
+      const keys = ['ArrowLeft', 'ArrowRight', 'j', 'l', 'J', 'L'];
+      if (keys.includes(e.key)) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+      }
+    };
+    window.addEventListener('keydown', window.blockVideoKeys, true);
+
+    window.preventSeek = (event) => event.preventDefault();
+    player.addEventListener('will-seek', window.preventSeek);
+  } else {
+    window.lePlayerSeekBlocked = false;
+    interactiveElements.forEach(el => el.removeAttribute('disabled'));
+
+    if (window.blockVideoKeys) {
+      window.removeEventListener('keydown', window.blockVideoKeys, true);
+      window.blockVideoKeys = null;
+    }
+
+    if (window.preventSeek) {
+      player.removeEventListener('will-seek', window.preventSeek);
+      window.preventSeek = null;
+    }
+  }
+
+  clearInterval(tentativaNavegacao);
+}, 1000);
+
+setTimeout(() => clearInterval(tentativaNavegacao), 10000);
+
+
 
     // --- Aplica estilos de legendas ---
     function applyCaptionStyles() {
