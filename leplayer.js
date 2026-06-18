@@ -348,6 +348,7 @@ class LePlayer extends HTMLElement {
     video.style.width = '100%';
     video.style.height = '100%';
     if (isAutoplay) { video.autoplay = true; video.muted = true; }
+    if (inicioMudo) { video.muted = true; }
     if (!isAutoplay && inicioMudo) { video.muted = true; }
     if (isLoop) { video.loop = true; }
     containerEl.appendChild(video);
@@ -363,12 +364,6 @@ class LePlayer extends HTMLElement {
 
     setupGestures(vidstackPlayer);
 
-    // Inicio mudo
-    if (inicioMudo) {
-    vidstackPlayer.addEventListener('loaded-data', () => {
-        vidstackPlayer.muted = true;
-    });
-    }
 
     // --- Aplica estilos de legendas ---
     function applyCaptionStyles() {
