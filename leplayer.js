@@ -363,39 +363,43 @@ class LePlayer extends HTMLElement {
 
     setupGestures(vidstackPlayer);
 
-    // --- Início mudo automático ---
-
+    // Aplica início mudo (adaptado do script original)
     function applyMuted() {
-      const player = window.meuPlayerVidstack;
-      if (!player) return false;
+    const player = window.meuPlayerVidstack;
+    if (!player) return false;
 
-      const iniciarMudo = config?.['iniciar_mudo'] ?? false;
-      const videoElement = document.querySelector('#temp-player video');
+    const iniciarMudo = config?.['iniciar_mudo'] ?? false;
 
-      if (iniciarMudo) {
+    if (iniciarMudo) {
+        // Usa a API do Vidstack para mutar
         player.muted = true;
-        if (videoElement) {
-            videoElement.muted = true;
-            videoElement.setAttribute('muted', '');
+        // Força também no elemento nativo
+        const videoEl = player.el?.querySelector('video');
+        if (videoEl) {
+            videoEl.muted = true;
+            videoEl.setAttribute('muted', '');
         }
-     } else {
+    } else {
         player.muted = false;
-        if (videoElement) {
-            videoElement.muted = false;
-            videoElement.removeAttribute('muted');
+        const videoEl = player.el?.querySelector('video');
+        if (videoEl) {
+            videoEl.muted = false;
+            videoEl.removeAttribute('muted');
         }
-      }
-
-      return true;
     }
 
-const tentativaMudo = setInterval(() => {
-    if (applyMuted()) {
-        clearInterval(tentativaMudo);
-    }
-}, 200);
+    return true;
+  }
 
-setTimeout(() => clearInterval(tentativaMudo), 5000);
+  // Tenta aplicar com retry, mas com um pequeno delay inicial
+  setTimeout(() => {
+    const tentativaMudo = setInterval(() => {
+        if (applyMuted()) {
+            clearInterval(tentativaMudo);
+        }
+    }, 200);
+    setTimeout(() => clearInterval(tentativaMudo), 5000);
+  }, 300); // Aguarda 300ms para o player carregar
 
     // --- Aplica estilos de legendas ---
     function applyCaptionStyles() {
