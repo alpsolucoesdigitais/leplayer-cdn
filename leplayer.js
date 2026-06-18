@@ -363,23 +363,27 @@ class LePlayer extends HTMLElement {
     window.meuPlayerVidstack = vidstackPlayer;
 
     // INICIO MUDO
-    // INICIO MUDO
-  const tentativaMudo = setInterval(() => {
-    const player = window.meuPlayerVidstack;
-    if (!player) return;
+const tentativaMudo = setInterval(() => {
+  const player = window.meuPlayerVidstack;
+  if (!player) return;
 
-    if (inicioMudo) {
-      player.muted = true;
-      if (document.querySelector('#temp-player video')) {
-        document.querySelector('#temp-player video').muted = true;
-        document.querySelector('#temp-player video').setAttribute('muted', '');
-      }
+  if (inicioMudo) {
+    player.muted = true;
+    if (document.querySelector('#temp-player video')) {
+      document.querySelector('#temp-player video').muted = true;
+      document.querySelector('#temp-player video').setAttribute('muted', '');
     }
+  }
 
-    clearInterval(tentativaMudo);
-  }, 1000);
+  clearInterval(tentativaMudo);
+}, 1000);
 
-    setTimeout(() => clearInterval(tentativaMudo), 10000);
+setTimeout(() => clearInterval(tentativaMudo), 10000);
+    
+
+
+
+    setupGestures(vidstackPlayer);
 
 
     // --- Aplica estilos de legendas ---
