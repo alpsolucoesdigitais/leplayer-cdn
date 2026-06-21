@@ -894,6 +894,64 @@ setTimeout(() => clearInterval(tentativaVelocidade), 10000);
       setTimeout(() => clearInterval(borderInterval), 5000);
 
 
+    // Definição do Dicionário PT-BR
+    const traducoesPTBR = {
+    'Audio': 'Áudio',
+    'Auto': 'Automático',
+    'Captions': 'Legendas',
+    'Enter Fullscreen': 'Tela Cheia',
+    'Exit Fullscreen': 'Sair da Tela Cheia',
+    'Enter PiP': 'Mini Player',
+    'Exit PiP': 'Sair do Mini Player',
+    'Go back to previous menu': 'Voltar',
+    'Mute': 'Mudo',
+    'Normal': 'Normal',
+    'Pause': 'Pausar',
+    'Play': 'Reproduzir',
+    'Quality': 'Qualidade',
+    'Reset': 'Redefinir',
+    'Restart': 'Reiniciar',
+    'Rewind': 'Voltar',
+    'Seek': 'Buscar',
+    'Settings': 'Configurações',
+    'Speed': 'Velocidade',
+    'Start': 'Início',
+    'Unmute': 'Ativar som',
+    'Volume': 'Volume',
+    'Loop': 'Loop',
+    'Disabled': 'Desativado',
+    'Enabled': 'Ativado',
+    'Download': 'Baixar',
+    'Duration': 'Duração',
+    'Enable captions': 'Ativar legendas',
+    'Disable captions': 'Desativar legendas'
+
+    };
+
+ 
+  function aplicarTraducao() {
+    const playerLayout = document.querySelector('media-plyr-layout');
+
+    if (playerLayout) {
+        playerLayout.translations = traducoesPTBR;
+        console.log('Player traduzido para PT-BR com sucesso!');
+        return true; 
+    }
+    return false;
+  }
+
+if (!aplicarTraducao()) {
+    const intervaloTraducao = setInterval(() => {
+        if (aplicarTraducao()) {
+            clearInterval(intervaloTraducao); 
+        }
+    }, 500);
+
+    
+    setTimeout(() => {
+        clearInterval(intervaloTraducao);
+    }, 5000);
+  }
 
 
   }
